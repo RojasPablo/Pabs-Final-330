@@ -7,6 +7,10 @@
 Proposal and Task Breakdown
 Your Final Project proposal is due. You should submit a link to a GitHub project that will house your submission. The project README should contain your project proposal. Your proposal should include:
 
+### UPDATE
+
+    - Completed Models, Dao, and route setup. Finished auth test suite, and have connected mongoDB Atlas to store my collections. Postman is fully functional as well ensuring that my endpoints are working as expected. Will continue to workout on the other 2 test suites, and front end application to present a demo of the project.
+
 ### 1. A description of the scenario your project is operating in.
 
     - The project is operating as a workout / milestone app. In the app, a user will be able to log in their workout sessions, with input fields that include the name of exercise performed, time elapsed, and the date they conducted their session. In addition, a milestone feature will be implemented as well. These will be fitness achievements set by the admin to help motivate our fitness users and help them explore new heights in their athletic journeys.
