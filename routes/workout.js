@@ -18,25 +18,29 @@ router.post("/", isAuthorized, async (req, res, next) => {
 })
 
 //TODO: GET / getAllWorkoutLogs()
-router.get("/", isAuthorized, async (req, res, next) => {
+router.get("/", isAuthorized, async (req, res) => {
     try {
-        const workouts = await workoutDao.getAllWorkoutLogs();
-        workouts = workouts.map(workout => {
+        console.log('Fetching all workout logs for user:', req.user._id);
+        const query = req.query.q; // Get the query from request
+        const workouts = await workoutDao.getAllWorkoutLogs(req.user._id, query);
+        console.log('Workout logs retrieved:', workouts);
+        const formattedWorkouts = workouts.map(workout => {
             const workoutObject = workout.toObject();
             if (workoutObject.datePerformed) {
-                workoutObject.datePerformed = workoutObject.datePerformed.toDateString()
+                workoutObject.datePerformed = workoutObject.datePerformed.toDateString();
             }
             return workoutObject;
-        })
+        });
 
-        return res.status(200).json(workouts);
+        res.status(200).json(formattedWorkouts);
     } catch (error) {
-        return res.status(500).json({ message: "Failed to find workouts" });
+        res.status(500).json({ message: "Failed to find workouts" });
     }
-})
+});
+
 
 //TODO: GET / getWorkoutById()
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", isAuthorized, async (req, res, next) => {
     try {
 
         const workoutId = req.params.id;
@@ -56,22 +60,25 @@ router.get("/:id", async (req, res, next) => {
 
 
 //TODO: PUT / updateWorkoutLog
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", isAuthorized, async (req, res, next) => {
     try {
         const workoutId = req.params.id;
         const newWorkoutData = req.body;
 
         if (!newWorkoutData) {
-            return res.status(400).json({ message: 'New workout data required'});
+            return res.status(400).json({ message: 'New workout data required' });
         }
         const updatedLog = await workoutDao.updateWorkoutLog(workoutId, newWorkoutData);
-
-        return res.status(200).json({ message: 'Update Succesful', workout: updatedLog})
-
+        if (!updatedLog) {
+            return res.status(404).json({ message: 'Workout log not found' });
+        }
+        return res.status(200).json({ message: 'Update Successful', workout: updatedLog });
     } catch (error) {
-        return res.status(500).json({ message: 'failed to update workout log'});
+        return res.status(500).json({ message: 'Failed to update workout log' });
     }
-})
+});
+
+
 
 
 //TODO: DELETE / deleteWorkoutLog()
@@ -89,5 +96,6 @@ router.delete("/:workoutId", async (req, res, next) => {
         next (e);
     }
 })
+
 
 module.exports = router;

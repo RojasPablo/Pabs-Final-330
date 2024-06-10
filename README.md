@@ -7,9 +7,9 @@
 Proposal and Task Breakdown
 Your Final Project proposal is due. You should submit a link to a GitHub project that will house your submission. The project README should contain your project proposal. Your proposal should include:
 
-### UPDATE
+### SELF EVALUATION - pabs
 
-    - Completed Models, Dao, and route setup. Finished auth test suite, and have connected mongoDB Atlas to store my collections. Postman is fully functional as well ensuring that my endpoints are working as expected. Will continue to workout on the other 2 test suites, and front end application to present a demo of the project.
+    - I am very proud of what I accomplished with this project. The app had meaningful connections to my hobbies and I was able to produce a meaningful fitness tracker. I took your words to heart of producing something that we would be happy to put in our portfolios, and this back-end turned full-stack project did just that. I have worked on this rigorously each day since the assignment was introduced and my dedication paid off in my eyes. My understanding of models, daos, routes and how they connect have grown substantially. You will find text search and Indexing implemented within the Workout side of the project. I will be submitting this Back end and Front end Repo to the submission page. Thank you for teaching us this quarter, best wishes!
 
 ### 1. A description of the scenario your project is operating in.
 

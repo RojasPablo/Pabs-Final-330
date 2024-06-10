@@ -1,5 +1,7 @@
 //TODO: WOROUT DAO
+const { query } = require('express');
 const Workout = require('../models/workout');
+const { search } = require('../routes/workout');
 
 module.exports = {};
 
@@ -14,15 +16,21 @@ module.exports.createWorkoutLog = async (workoutObj, userId) => {
     }
 }
 //TODO: READ All workout logs
-module.exports.getAllWorkoutLogs = async () => {
+module.exports.getAllWorkoutLogs = async (userId, query) => {
     try {
-        const workouts = await Workout.find({});
+        let workouts;
+        if (query) {
+            // Perform text search if query is provided
+            workouts = await Workout.find({ user: userId, $text: { $search: query } }).sort({ datePerformed: -1 }).exec();
+        } else {
+            // Fetch all workouts if no query is provided in order of newest first
+            workouts = await Workout.find({ user: userId }).sort({ datePerformed: -1 }).exec();
+        }
         return workouts;
     } catch (error) {
-        console.error('Error retrieving workout logs:', error);
         throw new Error('Failed to retrieve workout sessions');
     }
-}
+};
 
 //TODO: READ workout log by id
 module.exports.getWorkoutLogById = async (workoutId) => {
@@ -49,7 +57,7 @@ module.exports.updateWorkoutLog = async (logId, newLogData) => {
         const updatedSession = await Workout.findByIdAndUpdate(logId, newLogData, { new: true });
         // checks if there was an item to update 
         if (!updatedSession) {
-            throw new Error('No new updates were made to workout log');
+            return null;
         }
         return updatedSession;
     } catch (error) {
