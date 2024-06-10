@@ -1,7 +1,5 @@
-//TODO: MILESTONE DAO
-
 const Milestone = require('../models/milestone');
-// const User = require('../models/user');
+const User = require('../models/user');
 
 module.exports = {};
 
@@ -42,21 +40,18 @@ module.exports.getMilestoneById = async (milestoneId) => {
 //TODO: UPDATE milestone by ID / admin only
 module.exports.updateMilestone = async (milestoneId, newData, userRole) => {
     try {
-        // Define what can be updated based on the user's role
         let updateData = {};
 
-        // Admins can update any part of a milestone
         if (userRole === 'admin') {
             updateData = newData; 
-        } 
-        // Regular users can only update the isCompleted field
-        else if (userRole === 'user' && newData.hasOwnProperty('isCompleted') && Object.keys(newData).length === 1) {
+        } else if (userRole === 'user' && newData.hasOwnProperty('isCompleted') && Object.keys(newData).length === 1) {
             updateData = { isCompleted: newData.isCompleted };
         } else {
-            throw new Error('Unauthorized to update this milestone');
+            const error = new Error('Unauthorized to update this milestone');
+            error.status = 403;
+            throw error;
         }
 
-        // Perform the update directly in the database
         const updatedMilestone = await Milestone.findByIdAndUpdate(milestoneId, updateData, { new: true, runValidators: true });
         if (!updatedMilestone) {
             throw new Error('Milestone not found or no update performed');
@@ -64,18 +59,24 @@ module.exports.updateMilestone = async (milestoneId, newData, userRole) => {
 
         return updatedMilestone;
     } catch (error) {
-        throw new Error('Error updating milestone: ' + error.message);
+        if (error.status !== 403) {
+            console.error('Unexpected error updating milestone:', error.message);
+        }
+        throw error;
     }
 };
+
+
+
 //TODO: DELETE milestone by ID / admin only
 module.exports.deleteMilestone = async (milestoneId) => {
     try {
         const milestone = await Milestone.findByIdAndDelete(milestoneId);
         if (!milestone) {
-            return null;
+            throw new Error('Milestone not found');
         }
-        return { message: 'Deleted the following milestone:', milestone};
+        return { message: 'Deleted the following milestone:', milestone };
     } catch (error) {
-        console.error('Error deleting specified milestone');
+        throw new Error('Error deleting specified milestone: ' + error.message);
     }
 }

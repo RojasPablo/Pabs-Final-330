@@ -13,10 +13,12 @@ describe("/auth", () => {
   afterEach(testUtils.clearDB);
 
   const user0 = {
+    username: "user0",
     email: "user0@mail.com",
     password: "123password",
   };
   const user1 = {
+    username: "user1",
     email: "user1@mail.com",
     password: "456password",
   };

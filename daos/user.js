@@ -8,9 +8,9 @@ module.exports = {};
 module.exports.createUser = async (userObj) => {
     
     try {
-        const { email, password, roles } = userObj;
+        const { username, email, password, roles } = userObj;
         
-        const user = new User({ email, password, roles });
+        const user = new User({ username, email, password, roles });
         await user.save();
         
         return user;
